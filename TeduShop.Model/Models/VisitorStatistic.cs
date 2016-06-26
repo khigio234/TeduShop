@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TeduShop.Model.Models
 {
     [Table("VisitorStatistics")]
-    internal class VisitorStatistic
+    public class VisitorStatistic
     {
         [Key]
         public Guid Id { get; set; }
