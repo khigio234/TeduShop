@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201606260657588_InitialDB.Designer.cs">
       <DependentUpon>201606260657588_InitialDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606270440421_ChangeModel.cs" />
+    <Compile Include="Migrations\201606270440421_ChangeModel.Designer.cs">
+      <DependentUpon>201606270440421_ChangeModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FooterRepository.cs" />
@@ -98,6 +102,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201606260657588_InitialDB.resx">
       <DependentUpon>201606260657588_InitialDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606270440421_ChangeModel.resx">
+      <DependentUpon>201606270440421_ChangeModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
