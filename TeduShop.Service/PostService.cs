@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using TeduShop.Data.Infrastructure;
 using TeduShop.Data.Repositories;
 using TeduShop.Model.Models;
@@ -18,18 +17,20 @@ namespace TeduShop.Service
 
         IEnumerable<Post> GetAllPaging(int page, int pageSize, out int totalRow);
 
+        IEnumerable<Post> GetAllByCategoryPaging(int categoryId, int page, int pageSize, out int totalRow);
+
         Post GetById(int id);
 
-        IEnumerable<Post> GetAllTagPaging(int page, int pageSize, out int totalRow);
+        IEnumerable<Post> GetAllTagPaging(string tag, int page, int pageSize, out int totalRow);
 
         void SaveChanges();
     }
 
     public class PostService : IPostService
     {
-        IPostRepository _postRepository;
+        private readonly IPostRepository _postRepository;
 
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public PostService(IPostRepository postRepository, IUnitOfWork unitOfWork)
         {
@@ -54,7 +55,7 @@ namespace TeduShop.Service
 
         public IEnumerable<Post> GetAll()
         {
-            return _postRepository.GetAll(new string[] {"PostCategory"});
+            return _postRepository.GetAll(new string[] { "PostCategory" });
         }
 
         public IEnumerable<Post> GetAllPaging(int page, int pageSize, out int totalRow)
@@ -67,15 +68,19 @@ namespace TeduShop.Service
             return _postRepository.GetSingleById(id);
         }
 
-        public IEnumerable<Post> GetAllTagPaging(int page, int pageSize, out int totalRow)
+        public IEnumerable<Post> GetAllTagPaging(string tag, int page, int pageSize, out int totalRow)
         {
-            //TODO: Select all post by tag
-            return _postRepository.GetMultiPaging(x => x.Status, out totalRow, page, pageSize);
+            return _postRepository.GetAllByTag(tag, page, pageSize, out totalRow);
         }
 
         public void SaveChanges()
         {
             _unitOfWork.Commit();
+        }
+
+        public IEnumerable<Post> GetAllByCategoryPaging(int categoryId, int page, int pageSize, out int totalRow)
+        {
+            return _postRepository.GetMultiPaging(x => x.Status && x.CategoryId == categoryId, out totalRow, page, pageSize, new string[] { "PostCategory" });
         }
     }
 }

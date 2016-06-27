@@ -39,7 +39,7 @@ namespace TeduShop.Model.Models
 
         public string Content { get; set; }
 
-        public DateTime? CreatedTime { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
