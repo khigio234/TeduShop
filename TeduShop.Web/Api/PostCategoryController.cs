@@ -1,39 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TeduShop.Model.Models;
+using TeduShop.Service;
+using TeduShop.Web.Infrastructure.Core;
 
 namespace TeduShop.Web.Api
 {
-    public class PostCategoryController : ApiController
+    [RoutePrefix("api/postcategory")]
+    public class PostCategoryController : ApiControllerBase
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        private IPostCategoryService _postCategoryService;
+
+        public PostCategoryController(IErrorService errorService, IPostCategoryService postCategoryService) : base(errorService)
         {
-            return new string[] { "value1", "value2" };
+            _postCategoryService = postCategoryService;
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [Route("getall")]
+        public HttpResponseMessage Get(HttpRequestMessage requestMessage)
         {
-            return "value";
+            return CreateHttpResponseMessage(requestMessage, () =>
+            {
+                HttpResponseMessage responseMessage = null;
+                if (ModelState.IsValid)
+                {
+                    requestMessage.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                else
+                {
+                    var listCategory = _postCategoryService.GetAll();
+                    responseMessage = requestMessage.CreateResponse(HttpStatusCode.OK, listCategory);
+                }
+                return responseMessage;
+            });
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Post(HttpRequestMessage requestMessage, PostCategory postCategory)
         {
+            return CreateHttpResponseMessage(requestMessage, () =>
+            {
+                HttpResponseMessage responseMessage = null;
+                if (ModelState.IsValid)
+                {
+                    requestMessage.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                else
+                {
+                    var category = _postCategoryService.Add(postCategory);
+                    _postCategoryService.Save();
+                    responseMessage = requestMessage.CreateResponse(HttpStatusCode.Created, category);
+                }
+                return responseMessage;
+            });
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public HttpResponseMessage Put(HttpRequestMessage requestMessage, PostCategory postCategory)
         {
+            return CreateHttpResponseMessage(requestMessage, () =>
+            {
+                HttpResponseMessage responseMessage = null;
+                if (ModelState.IsValid)
+                {
+                    requestMessage.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                else
+                {
+                    _postCategoryService.Update(postCategory);
+                    _postCategoryService.Save();
+                    responseMessage = requestMessage.CreateResponse(HttpStatusCode.OK);
+                }
+                return responseMessage;
+            });
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(HttpRequestMessage requestMessage, int id)
         {
+            return CreateHttpResponseMessage(requestMessage, () =>
+            {
+                HttpResponseMessage responseMessage = null;
+                if (ModelState.IsValid)
+                {
+                    requestMessage.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                else
+                {
+                    _postCategoryService.Delete(id);
+                    _postCategoryService.Save();
+                    responseMessage = requestMessage.CreateResponse(HttpStatusCode.OK);
+                }
+                return responseMessage;
+            });
         }
     }
 }
